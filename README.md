@@ -10,15 +10,19 @@
 *  Got issues?  Cut and paste to ChartGPT and ask for assistance as both tests must woprk before proceeding
 
 ## Start the demo:
-* You should see this message - server started on port localhost:3000
-* (open index.html app) in the browser add localhost:3000
+* You should see this message - server started on port localhost:3001
+* (open index.html app) in the browser add localhost:3001
 
 ## Start the demo:
 * Open a session in your terminal in the folder with our code run this: node app.js 
-* You should see this message - server started on port localhost:3000
-* (open index.html app) in the browser add localhost:3000
+* You should see this message - server started on port localhost:3001
+* (open index.html app) in the browser add localhost:3001
 * (connect) press connect you should see the connection ready 
 * (Enter Chat Text) press the start button to start streaming
 
 ## Final Thoughts
 * Be patient and enjoy the puzzle if things are not working right away -- stay with it you will get it!
+
+For help See the Yuutube:  https://youtu.be/KhYjGOzMcFw
+
+![image](https://github.com/jjmlovesgit/D-ID_langchain_withChatGPT/assets/47751509/49ac2968-9777-4641-81de-80905f8361b5)
