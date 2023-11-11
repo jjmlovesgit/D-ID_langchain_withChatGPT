@@ -1,4 +1,4 @@
-# Streaming Live Demo by D-ID
+# Streaming Live Avitar with a Langchain Retrieval on provate data with D=ID and ChatGPT
 
 ## Initial Setup:
 * (install express) open a terminal in the folder:
