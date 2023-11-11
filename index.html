@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>D-ID Streaming POC</title>
+    <!-- added google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      #user-input-field {
+          width: 80%; /* Set desired width here */
+          padding: 8px; /* Adding some padding for better appearance */
+          box-sizing: border-box; /* So the width includes padding */
+          margin: 0 auto; /* Centering the input box */
+          display: block; /* To apply margin auto */
+      }
+      body {
+      background-color: #121212;
+      color: #ffffff;
+      font-family: 'Mulish', sans-serif;
+      }
+      .peerConnectionState-new {
+        color: cornflowerblue;
+      }
+      .peerConnectionState-connecting {
+        color: orange;
+      }
+      .peerConnectionState-connected {
+        color: green;
+      }
+      .peerConnectionState-disconnected,
+      .peerConnectionState-closed,
+      .peerConnectionState-failed {
+        color: red;
+      }
+
+      .iceConnectionState-new {
+        color: cornflowerblue;
+      }
+      .iceConnectionState-checking {
+        color: orange;
+      }
+      .iceConnectionState-connected,
+      .iceConnectionState-completed {
+        color: green;
+      }
+      .peerConnectionState-disconnected,
+      .peerConnectionState-closed,
+      .peerConnectionState-failed {
+        color: red;
+      }
+
+      .iceGatheringState-new {
+        color: cornflowerblue;
+      }
+      .iceGatheringState-gathering {
+        color: orange;
+      }
+      .iceGatheringState-complete {
+        color: black;
+      }
+
+      .signalingState-stable {
+        color: green;
+      }
+      .signalingState-have-local-offer,
+      .signalingState-have-remote-offer,
+      .signalingState-have-local-pranswer,
+      .signalingState-have-remote-pranswer {
+        color: cornflowerblue;
+      }
+      .signalingState-closed {
+        color: red;
+      }
+
+      .streamingState-streaming {
+        color: green;
+      }
+
+      .streamingState-empty {
+        color: grey;
+      }
+
+      /* added css from here */
+
+      body * {
+        font-family: 'Mulish', sans-serif;
+        text-align: center;
+      }
+
+      #content {
+        width: 820px;
+        position: relative;
+        margin: 0 auto;
+      }
+
+      #buttons {
+        clear: both;
+        padding: 0 0 0 0;
+        text-align: center;
+      }
+
+      button {
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        font-size: 16px;
+        margin: 0 5px;
+        background-color: #7459fe;
+        color: #fff;
+        margin-bottom: 20px; 
+      }
+
+      button:hover {
+        background-color: #9480ff;
+        cursor: pointer;
+        transition: all 0.2s ease-out;
+      }
+
+      #status {
+        clear: both;
+        padding: 20px 0 0 0;
+        text-align: left;
+        display: inline-block;
+        zoom: 1;
+        line-height: 140%;
+        font-size: 15px;
+      }
+
+      #status div {
+        padding-bottom: 10px;
+      }
+
+      #video-wrapper {
+        background: url(bg.png);
+        height: 500px;
+        background-position: top;
+      }
+
+      #video-wrapper div {
+        width: 400px;
+        margin: 0 auto;
+        padding: 50px 0 0 0;
+      }
+      video {
+        display: block;
+        /* border:1px solid; */
+        border-radius: 50%;
+        background-color: #000;
+      }
+
+      #response-container {
+      text-align: left;
+      margin-left: 20px;
+      color: #000000;
+      background-color: #ffffff;
+      padding: 10px;
+      border-radius: 5px;
+      max-height: 150px; /* Adjust the max-height as needed, approximately 10 lines */
+      overflow-y: auto; /* Adds a scrollbar if content exceeds the container's height */
+      /* You might need to adjust line-height and font-size to fine-tune the 10 lines appearance */
+      line-height: 1.6; /* Adjust line height for better readability */
+      font-size: 16px; /* Adjust font size as needed */
+      margin-top: 20px;
+      }
+
+    </style>
+  </head>
+  
+  <body>
+    <div id="content">
+     <div id="video-wrapper">
+       <div class="video-container">
+         <video id="talk-video" width="360" height="360" autoplay></video>
+       </div>
+     </div>
+     <br />
+
+     <div id="input-container" style="text-align: left;">
+       <input type="text" id="user-input-field" placeholder="I am a helpful assistant... may I answer a question for you?" style="font-size: 20px;">
+       <div style="height: 1em;"></div> 
+       <hr> 
+       <div style="height: 1em;"></div> 
+       <div style="display: flex; justify-content: center;">
+         <input type="checkbox" id="toggleDID">
+         <label for="toggleDID">Send to DID</label>
+     </div>     
+       <div style="height: 1em;"></div> 
+   </div>
+   
+      <!-- added div#buttons -->
+      <div id="buttons">
+        <!-- index.html -->
+        <button id="connect-button" type="button">Connect</button>
+        <button id="voice-typing-button" type="button">Voice Typing</button>
+        <button id="talk-button" type="button">Let's Chat</button>
+        <button id="destroy-button" type="button">End Chat</button>
+      </div>
+
+      <!-- ... other HTML ... -->
+      <div id="response-container">Server response will appear here for reference</div> 
+      <!-- ... other HTML ... -->
+
+      <!-- added div#status -->
+      <div id="status">
+        ICE gathering status: <span id="ice-gathering-status-label"></span><br />
+        ICE status: <span id="ice-status-label"></span><br />
+        Peer connection status: <span id="peer-status-label"></span><br />
+        Signaling status: <span id="signaling-status-label"></span><br />
+        Streaming status: <span id="streaming-status-label"></span><br />
+      </div>
+    </div>
+
+    <script>
+      if ('webkitSpeechRecognition' in window) {
+        var recognition = new webkitSpeechRecognition();
+        recognition.continuous = false; // Set this to true if you want the recognition to continue even after it detects a pause in speaking
+        recognition.interimResults = true; // Show interim results
+        recognition.lang = 'en-US'; // Set the language of the recognition
+  
+        // What to do when speech is detected
+        recognition.onresult = function(event) {
+          var final_transcript = '';
+          for (var i = event.resultIndex; i < event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+              final_transcript += event.results[i][0].transcript;
+            }
+          }
+          // Update the text field with the result
+          document.getElementById('user-input-field').value = final_transcript;
+        };
+  
+        // Start the speech recognition when the button is clicked
+        document.getElementById('voice-typing-button').addEventListener('click', function() {
+          recognition.start();
+        });
+      } else {
+        alert("Web Speech API is not supported in this browser.");
+      }
+    </script>
+
+    <script type="module" src="./langindex.js"></script>
+    <script type="module" src="./streaming-client-api.js"></script>  
+    </body>
+</html>

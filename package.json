@@ -1,0 +1,14 @@
+{
+    "dependencies": {
+    "express": "^4.18.2",
+    "hnswlib-node": "^1.4.2",
+    "langchain": "^0.0.184",
+    "node-fetch": "^2.7.0",
+    "npm": "^10.2.3",
+    "openai": "^4.17.1",
+    "uninstall": "^0.0.0"
+  },
+  "scripts": {
+    "dev": "node app.js"
+  }
+}
